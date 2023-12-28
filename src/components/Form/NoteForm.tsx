@@ -4,14 +4,23 @@ import { useNavigate } from "react-router-dom"
 
 import ReactSelect from "react-select/creatable"
 import { Tag } from "../../types"
+import { CreateNoteProps } from "./CreateNote"
+import {v4} from 'uuid'
 
-const NoteForm = () => {
+const NoteForm = ({onSubmit,avaliableTags,createTag}:CreateNoteProps) => {
     const navigate = useNavigate()
     const titleRef =useRef<HTMLInputElement>(null)
     const markDownRef = useRef<HTMLTextAreaElement>(null)
-    const [selectedTags,setSelectedTags] = useState<Tag[]>()
+    const [selectedTags,setSelectedTags] = useState<Tag[]>([])
     const handleSubmit = (e:FormEvent<HTMLFormElement>)=> {
-        e.preventDefault()
+        e.preventDefault();
+
+        //yeni not oluştur
+        onSubmit({
+            title:titleRef.current!.value,
+            markdown: markDownRef.current!.value,
+            tags:selectedTags
+        })
     }
   return (
    <Form
@@ -32,7 +41,27 @@ const NoteForm = () => {
             <Col>
                 <Form.Group>
                     <Form.Label>Etiketler</Form.Label>
-                    <ReactSelect  className="shadow" isMulti/>
+                    <ReactSelect 
+                    //seçilen elemanları göstermek için
+                    value={selectedTags}
+                    // elemanlar silindiğinde stati günceller
+                    //  bir alt satırda ts tip kontrollerini devre dışı bırakır
+                    //@ts-ignore
+                    onChange={(allTags)=>setSelectedTags(allTags)}
+                    //yeni etiket oluştruldğunda 
+                    onCreateOption={(text)=> {
+                        // etikete id ekle ve state aktar
+                        const newTag:Tag ={
+                            label:text,
+                            value:v4()
+                        }  
+                        //state i güncelle
+                        setSelectedTags([...selectedTags,newTag])
+                        //locale yeni etiketi kaydeder
+                        createTag(newTag)
+
+                    }}
+                    className="shadow" isMulti/>
                 </Form.Group>
             </Col>
         </Row>

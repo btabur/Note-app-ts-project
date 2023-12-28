@@ -24,5 +24,5 @@ export  type RowNote = {
 export type RowNoteData = {
     title:string;
     markdown:string;
-    tags:string[]  
+    tagIds:string[]  
 }
