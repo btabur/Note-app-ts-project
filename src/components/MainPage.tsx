@@ -2,10 +2,35 @@ import { Form,Button, Col, Row, Stack } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import ReactSelect from "react-select"
 import NoteCard from "./NoteCard"
+import { Note, Tag } from "../types"
+import { useMemo, useState } from "react"
 
-// todo undefined hatası veriyor
+type MainPageProps = {
+  notes:Note[];
+  availableTags:Tag[];
+}
 
-const MainPage = () => {
+const MainPage = ({availableTags,notes}:MainPageProps) => {
+  const [title,setTitle] =useState<string>('')
+  const [selectedTags,setSelectedTags] =useState<Tag[]>([])
+
+  //filtereleme yaparken
+  //1. aratılan başlığı içeren note var mı
+  // 2. seçilen etiketlere sahip note var mı
+  const filtredNotes = useMemo(
+    ()=> notes.filter((note)=> {
+      return (
+        //notun başlığı aratılan başlığı içeriyorsa 
+        (title === '' || note.title.toLocaleLowerCase().includes(title.toLocaleLowerCase()))
+        &&
+        //seçilen etikletlerin tamamı note da varsa 
+        (selectedTags.length===0 ||  selectedTags.every((s_tag)=> 
+        note.tags.some((noteTag)=> noteTag.value===s_tag.value)
+        ))
+      )
+    })
+
+  ,[title,selectedTags,notes])
   return (
     <div className="container py-5 ">
         {/* Üst kısım */}
@@ -21,13 +46,18 @@ const MainPage = () => {
             <Col>
                 <Form.Group>
                     <Form.Label> Başlığa Göre Ara</Form.Label>
-                    <Form.Control className="shadow"/>
+                    <Form.Control 
+                    onChange={(e)=>setTitle(e.target.value)}
+                     className="shadow"/>
                 </Form.Group>
             </Col>
             <Col>
                 <Form.Group>
                     <Form.Label> Etikete Göre Ara</Form.Label>
-                   <ReactSelect className="shadow"/>
+                   <ReactSelect
+                   //@ts-ignore
+                   onChange={(allTags)=>setSelectedTags(allTags)}
+                   options={availableTags} isMulti className="shadow"/>
                 </Form.Group>
             </Col>
         </Row>
@@ -35,16 +65,13 @@ const MainPage = () => {
       </Form>
 
       {/* Not listesi */}
-        <Row xs={1} sm={2} lg={3} xl={4} className="gap-4">
-            <Col>
-            <NoteCard/>
-            </Col>
-            <Col>
-            <NoteCard/>
-            </Col>
-            <Col>
-            <NoteCard/>
-            </Col>
+        <Row xs={1} sm={2} lg={3} xl={4} className="g-4 mt-5">
+  
+           {filtredNotes.map((note)=> (
+              <Col key={note.id}>
+              <NoteCard  note={note}/>
+              </Col>
+           ))}
         </Row>
     </div>
   )

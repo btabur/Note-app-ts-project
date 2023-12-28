@@ -21,6 +21,8 @@ const NoteForm = ({onSubmit,avaliableTags,createTag}:CreateNoteProps) => {
             markdown: markDownRef.current!.value,
             tags:selectedTags
         })
+        //form gönderilince önceki sayfaya yönlendir
+        navigate(-1)
     }
   return (
    <Form
@@ -42,6 +44,8 @@ const NoteForm = ({onSubmit,avaliableTags,createTag}:CreateNoteProps) => {
                 <Form.Group>
                     <Form.Label>Etiketler</Form.Label>
                     <ReactSelect 
+                    //önceki etiketleri ekler
+                    options={avaliableTags}
                     //seçilen elemanları göstermek için
                     value={selectedTags}
                     // elemanlar silindiğinde stati günceller
