@@ -2,4 +2,4 @@
 
 - typescript kullanılarak eş zamanlı filitreleme yapabilen bir not app projesidir.
 
-![](ekran.gif)
+![](Ekran.gif)
