@@ -1,5 +1,5 @@
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import CreateNote from './components/Form/CreateNote'
 import EditNote from './components/Form/EditNote'
 import { useMemo } from 'react'
@@ -79,9 +79,11 @@ const App = () => {
              onSubmit={addNote}/>} />
 
           <Route element={<Layout notes = {noteWithTags}/>} path='/:id'>
-            <Route index element={<DetailPage/>}/>
-            <Route path='edit' element={<EditNote/>}/>
+            <Route index element={<DetailPage deleteNote= {deleteNote}/>}/>
+            <Route path='edit'  element={<EditNote availableTags={tags} createTag = {createTag} onSubmit = {updateNote}/>}/>
           </Route>
+
+          <Route path='*'  element={<Navigate to={'/'}/>}/>
       </Routes>
     </BrowserRouter>
   )

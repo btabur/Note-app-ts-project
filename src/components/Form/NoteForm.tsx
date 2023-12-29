@@ -7,11 +7,11 @@ import { Tag } from "../../types"
 import { CreateNoteProps } from "./CreateNote"
 import {v4} from 'uuid'
 
-const NoteForm = ({onSubmit,avaliableTags,createTag}:CreateNoteProps) => {
+const NoteForm = ({onSubmit,avaliableTags,createTag, markdown='',title='',tags=[]}:CreateNoteProps) => {
     const navigate = useNavigate()
     const titleRef =useRef<HTMLInputElement>(null)
     const markDownRef = useRef<HTMLTextAreaElement>(null)
-    const [selectedTags,setSelectedTags] = useState<Tag[]>([])
+    const [selectedTags,setSelectedTags] = useState<Tag[]>(tags)
     const handleSubmit = (e:FormEvent<HTMLFormElement>)=> {
         e.preventDefault();
 
@@ -35,6 +35,7 @@ const NoteForm = ({onSubmit,avaliableTags,createTag}:CreateNoteProps) => {
                 <Form.Group>
                     <Form.Label>Başlık</Form.Label>
                     <Form.Control 
+                    defaultValue={title}
                         ref={titleRef}
                         required 
                         className="shadow"/>
@@ -73,6 +74,7 @@ const NoteForm = ({onSubmit,avaliableTags,createTag}:CreateNoteProps) => {
         <Form.Group className="mt-4">
             <Form.Label>İçerik</Form.Label>
             <Form.Control 
+            defaultValue={markdown}
                 ref={markDownRef}
                 as={'textarea'}
                 className="shadow" 

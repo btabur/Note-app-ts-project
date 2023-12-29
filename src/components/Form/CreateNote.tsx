@@ -6,9 +6,9 @@ export type CreateNoteProps = {
   onSubmit:(data:NoteData)=> void;
   createTag:(tag:Tag)=>void;
   avaliableTags:Tag[];
-
-
-}
+} & Partial<NoteData>  
+//partial sayesinde miras aldığımız verileri opsiyonel 
+//yaptık yani isteğe bağlı hale getirdik
 
 
 const CreateNote = ({onSubmit, createTag,avaliableTags}:CreateNoteProps) => {

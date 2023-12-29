@@ -3,8 +3,11 @@ import { Link, useOutletContext } from "react-router-dom"
 import { Note } from "../types"
 import ReactMarkdown from 'react-markdown'
 
+type DetailPageProps = {
+    deleteNote :(id:string)=>void
+}
 
-const DetailPage = () => {
+const DetailPage = ({deleteNote}:DetailPageProps) => {
     const data:Note = useOutletContext()
   return (
     <div className="container my-5">
@@ -26,7 +29,9 @@ const DetailPage = () => {
                                  <Link to={'edit'}>
                                     <Button>Düzenle</Button>
                                 </Link>
-                                <Button variant="danger">Sil</Button>
+                                <Button
+                                onClick={()=> deleteNote(data.id)}
+                                 variant="danger">Sil</Button>
                                 <Link to={'/'}>
                                     <Button variant="outline-secondary">Geri</Button>
                                 </Link>
